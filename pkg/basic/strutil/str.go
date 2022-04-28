@@ -169,53 +169,6 @@ func IsEmptyOrUnderfined(str string) bool {
 	return IsNullOrUnderfined(str)
 }
 
-//-------- trim
-
-//trimSpaceByMode Removes space char at the beginning and end of the string by mode.
-//mode :
-//	-1 : left trim
-//	 0 : left and right
-//	 1 : right trim
-func trimSpaceByMode(str string, mode int) string {
-	if IsEmpty(str) {
-		return ""
-	}
-
-	strSize := len(str)
-
-	headPoint, endPoint := 0, strSize
-
-	if mode <= 0 {
-		for headPoint < endPoint && isSpaceASCII(str[headPoint]) {
-			headPoint++
-		}
-	}
-
-	if mode >= 0 {
-		for headPoint < endPoint && isSpaceASCII(str[endPoint-1]) {
-			endPoint--
-		}
-	}
-
-	return str[headPoint:endPoint]
-
-}
-
-//TrimSpaceRight Removes space char at the  end of the string
-func TrimSpaceRight(str string) string {
-	return trimSpaceByMode(str, 1)
-}
-
-//TrimSpaceLeft Removes space char at the beginning of the string
-func TrimSpaceLeft(str string) string {
-	return trimSpaceByMode(str, -1)
-}
-
-//TrimSpace Removes space char at the beginning and end of the string
-func TrimSpace(str string) string {
-	return trimSpaceByMode(str, 0)
-}
-
 //-----star check and end check
 
 //IsStartWith Checks if the str starts with a prefix
@@ -266,7 +219,154 @@ func IsEndWith(str, suffix string, ignoreCase bool) bool {
 
 }
 
+func IsEndWithAny(str string, ignoreCase bool, suffixs ...string) bool {
+	if IsEmpty(str) || sliceutil.IsEmpty(suffixs) {
+		return false
+	}
+
+	for _, v := range suffixs {
+		if IsEndWith(str, v, ignoreCase) {
+			return true
+		}
+	}
+
+	return false
+}
+
+//------ contains
+func Contains(str, substr string, ignoreCase bool) bool {
+	if ignoreCase {
+		str = strings.ToLower(str)
+		substr = strings.ToLower(substr)
+	}
+
+	return strings.Contains(str, substr)
+}
+
+//---- string operator
+
+func CutByMax(str string, max int) string {
+
+	if max < 0 {
+		panic("max mast bigger than 0")
+	}
+
+	if IsEmpty(str) {
+		return ""
+	}
+
+	if len(str) < max {
+		return str
+	}
+
+	res := strings.Builder{}
+
+	for _, v := range str {
+		if max > 0 {
+			res.WriteRune(v)
+			max--
+		} else {
+			break
+		}
+	}
+	res.WriteString(MORE_INFO_TARGET)
+	return res.String()
+
+}
+
+func ToSymbolCase(str string, symbol byte) string {
+
+	if IsEmpty(str) {
+		return ""
+	}
+
+	builder := strings.Builder{}
+
+	for _, v := range str {
+		if isUpperCase(v) {
+			builder.WriteByte(symbol)
+			builder.WriteRune(toLower(v))
+		} else {
+			builder.WriteRune(v)
+		}
+	}
+
+	res := builder.String()
+	if res[0] == symbol {
+		return res[1:]
+	}
+	return res
+}
+
+func ToUnderLineCase(str string) string {
+	return ToSymbolCase(str, '-')
+}
+
+//-------- trim
+
+//trimSpaceByMode Removes space char at the beginning and end of the string by mode.
+//mode :
+//	-1 : left trim
+//	 0 : left and right
+//	 1 : right trim
+func trimSpaceByMode(str string, mode int) string {
+	if IsEmpty(str) {
+		return ""
+	}
+
+	strSize := len(str)
+
+	headPoint, endPoint := 0, strSize
+
+	if mode <= 0 {
+		for headPoint < endPoint && isSpaceASCII(str[headPoint]) {
+			headPoint++
+		}
+	}
+
+	if mode >= 0 {
+		for headPoint < endPoint && isSpaceASCII(str[endPoint-1]) {
+			endPoint--
+		}
+	}
+
+	return str[headPoint:endPoint]
+
+}
+
+//TrimSpaceRight Removes space char at the  end of the string
+func TrimSpaceRight(str string) string {
+	return trimSpaceByMode(str, 1)
+}
+
+//TrimSpaceLeft Removes space char at the beginning of the string
+func TrimSpaceLeft(str string) string {
+	return trimSpaceByMode(str, -1)
+}
+
+//TrimSpace Removes space char at the beginning and end of the string
+func TrimSpace(str string) string {
+	return trimSpaceByMode(str, 0)
+}
+
 //todo: add char utils and move this func to it.
 func isSpaceASCII(char byte) bool {
 	return char == ' ' || char == '\t' || char == '\n' || char == '\r'
+}
+
+//todo: add char utils and move this func to it.
+func isUpperCase(char rune) bool {
+	if char >= 'A' && char <= 'Z' {
+		return true
+	}
+	return false
+}
+
+//todo: add char utils and move this func to it.
+func toLower(char rune) rune {
+	if isUpperCase(char) {
+		char += 'a' - 'A'
+	}
+
+	return char
 }

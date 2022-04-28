@@ -349,3 +349,56 @@ func TestIsStartWith(t *testing.T) {
 		})
 	}
 }
+
+func TestCutByMax(t *testing.T) {
+	type args struct {
+		str string
+		max int
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{name: "Chinese max cut", args: args{str: "你好，这里是为go语言构建的糖果屋", max: 4}, want: "你好，这..."},
+		{name: "Chinese max cut", args: args{str: "你好，这里是为go语言构建的糖果屋", max: 100}, want: "你好，这里是为go语言构建的糖果屋"},
+		{name: "Chinese max cut", args: args{str: `你啊啥都撒王石夹啥地方呢阿斯顿个擦拭地方阿斯顿发阿斯顿该发生的发阿斯顿发水淀粉阿斯顿发水淀粉阿斯顿发送到发送阿斯顿发水淀粉
+		阿斯顿了发噢索伦蒂诺阿斯顿发hi啊送的发水淀粉阿斯顿发送到发水淀粉
+		阿斯顿发送到发水淀粉阿斯顿发
+		阿斯顿发水淀粉`, max: 20}, want: "你啊啥都撒王石夹啥地方呢阿斯顿个擦拭地方..."},
+
+		{name: "English max cut", args: args{str: "hi this is candy house for go", max: 4}, want: "hi t..."},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CutByMax(tt.args.str, tt.args.max); got != tt.want {
+				t.Errorf("CutMaxByRune() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestToSymbolCase(t *testing.T) {
+	type args struct {
+		str    string
+		symbol byte
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{name: "big came to -", args: args{"HelloWorld", '-'}, want: "hello-world"},
+		{name: "small came to -", args: args{"helloWorld", '-'}, want: "hello-world"},
+		{name: "empty", args: args{"", '-'}, want: ""},
+		{name: "small came to _", args: args{"helloWorldCandyHouese", '_'}, want: "hello_world_candy_houese"},
+		{name: "big came to -", args: args{"HelloWorldCandyHouese", '_'}, want: "hello_world_candy_houese"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ToSymbolCase(tt.args.str, tt.args.symbol); got != tt.want {
+				t.Errorf("ToSymbolCase() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
