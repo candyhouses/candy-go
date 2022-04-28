@@ -25,7 +25,7 @@ func TestIsBlank(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := IsBlank(tt.args.str); got != tt.want {
+			if got := IsSpace(tt.args.str); got != tt.want {
 				t.Errorf("IsBlank() = %v, want %v", got, tt.want)
 			}
 		})
@@ -50,7 +50,7 @@ func TestHasBlank(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := HasBlank(tt.args.strs...); got != tt.want {
+			if got := HasSpace(tt.args.strs...); got != tt.want {
 				t.Errorf("HasBlank() = %v, want %v", got, tt.want)
 			}
 		})
@@ -75,7 +75,7 @@ func TestIsAllBlank(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := IsAllBlank(tt.args.strs...); got != tt.want {
+			if got := IsAllSpace(tt.args.strs...); got != tt.want {
 				t.Errorf("IsAllBlank() = %v, want %v", got, tt.want)
 			}
 		})
@@ -101,7 +101,7 @@ func TestBlankToDefault(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := BlankToDefault(tt.args.str, tt.args.defaultStr); got != tt.want {
+			if got := SpaceToDefault(tt.args.str, tt.args.defaultStr); got != tt.want {
 				t.Errorf("BlankToDefault() = %v, want %v", got, tt.want)
 			}
 		})
@@ -259,7 +259,7 @@ func TestIsAllNotBlank(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := IsAllNotBlank(tt.args.strs...); got != tt.want {
+			if got := IsAllNotSpace(tt.args.strs...); got != tt.want {
 				t.Errorf("IsAllNotBlank() = %v, want %v", got, tt.want)
 			}
 		})
@@ -314,8 +314,37 @@ func Test_trimBlankCharByMode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := trimBlankCharByMode(tt.args.str, tt.args.mode); got != tt.want {
+			if got := trimSpaceByMode(tt.args.str, tt.args.mode); got != tt.want {
 				t.Errorf("trimBlankCharByMode() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsStartWith(t *testing.T) {
+	type args struct {
+		str        string
+		prefix     string
+		ignoreCase bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{name: "real start with ingore case", args: args{str: "aabbcc", prefix: "aa", ignoreCase: true}, want: true},
+		{name: "real start with not ignore case", args: args{str: "aabbcc", prefix: "aa", ignoreCase: false}, want: true},
+		{name: "not real start with ingore case", args: args{str: "aabbcc", prefix: "AA", ignoreCase: true}, want: true},
+		{name: "not real start with not ignore case", args: args{str: "aabbcc", prefix: "AA", ignoreCase: false}, want: false},
+		{name: "all about str", args: args{str: "aabbcc", prefix: "aabbcc", ignoreCase: false}, want: true},
+		{name: "all about str", args: args{str: "aabbcc", prefix: "aabbcc", ignoreCase: true}, want: true},
+		{name: "all about str", args: args{str: "aabbcc", prefix: "AABBCC", ignoreCase: false}, want: false},
+		{name: "all about str", args: args{str: "aabbcc", prefix: "AABBCC", ignoreCase: true}, want: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsStartWith(tt.args.str, tt.args.prefix, tt.args.ignoreCase); got != tt.want {
+				t.Errorf("IsStartWith() = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -6,21 +6,21 @@ import (
 	"github.com/candyhouses/candy-go/pkg/basic/sliceutil"
 )
 
-// ------ Blank
+// ------ Space
 
-//IsBlank Check if a string is blank.
-//blank string means
+//IsSpace Check if a string is space.
+//IsSpace string means
 //1.Empty string
 //2.Consists of invisible characters e.g (" ","\n","\t","\r")
 
 //IsBlankIfStr Check if a interface{} is string and if this string is blank.
-func IsBlank(str string) bool {
+func IsSpace(str string) bool {
 
 	if isEmpty := IsEmpty(str); isEmpty {
 		return isEmpty
 	}
 	for i := 0; i < len(str); i++ {
-		if !isBlankASCII(str[i]) {
+		if !isSpaceASCII(str[i]) {
 			return false
 		}
 	}
@@ -29,20 +29,20 @@ func IsBlank(str string) bool {
 
 }
 
-//IsNotBlank Check if a string is not blank
-func IsNotBlank(str string) bool {
-	return !IsBlank(str)
+//IsNotSpace Check if a string is not Space
+func IsNotSpace(str string) bool {
+	return !IsSpace(str)
 }
 
-//HasBlank Check if has blank string in the array of string.
-//is equivalent to : IsBlank(...) || IsBlank(...) || ...
-func HasBlank(strs ...string) bool {
+//HasSpace Check if has Space string in the array of string.
+//is equivalent to : IsSpace(...) || IsSpace(...) || ...
+func HasSpace(strs ...string) bool {
 	if sliceutil.IsEmpty(strs) {
 		return true
 	}
 
 	for _, v := range strs {
-		if IsBlank(v) {
+		if IsSpace(v) {
 			return true
 		}
 	}
@@ -51,16 +51,16 @@ func HasBlank(strs ...string) bool {
 
 }
 
-//IsAllBlank Check if all string is blank
-//IsAllBlank is equivalent to : IsBlank(...) && IsBlank(...) && ...
-func IsAllBlank(strs ...string) bool {
+//IsAllSpace Check if all string is Space
+//IsAllSpace is equivalent to : IsSpace(...) && IsSpace(...) && ...
+func IsAllSpace(strs ...string) bool {
 
 	if sliceutil.IsEmpty(strs) {
 		return true
 	}
 
 	for _, v := range strs {
-		if IsNotBlank(v) {
+		if IsNotSpace(v) {
 			return false
 		}
 	}
@@ -68,15 +68,15 @@ func IsAllBlank(strs ...string) bool {
 	return true
 }
 
-//IsAllNotEmpty Check if all of strs is Blank.
-func IsAllNotBlank(strs ...string) bool {
-	return !HasBlank(strs...)
+//IsAllNotSpace Check if all of strs is Space.
+func IsAllNotSpace(strs ...string) bool {
+	return !HasSpace(strs...)
 }
 
-//BlankToDefault  Check if a string is blank ,if it's blank ,set a default value.
-func BlankToDefault(str, defaultStr string) string {
+//SpaceToDefault  Check if a string is Space ,if it's Space ,set a default value.
+func SpaceToDefault(str, defaultStr string) string {
 
-	if IsBlank(str) {
+	if IsSpace(str) {
 		return defaultStr
 	}
 	return str
@@ -94,7 +94,6 @@ func BlankToDefault(str, defaultStr string) string {
 //3. IsEmpty(" \n \t \r") = false
 //
 //IsEmpty can't check blank string.Check blank string should use IsBlank
-
 func IsEmpty(str string) bool {
 
 	return str == "" || len(str) == 0
@@ -152,12 +151,12 @@ func IsAllNotEmpty(strs ...string) bool {
 
 //isNullOrUnderfined Check if str is null or undefined
 func IsNullOrUnderfined(str string) bool {
-	str = TrimBlankChar(str)
+	str = TrimSpace(str)
 	return NULL == str || UNDEFINED == str
 }
 
-func IsBlankOrUnderfined(str string) bool {
-	if IsBlank(str) {
+func IsSpaceOrUnderfined(str string) bool {
+	if IsSpace(str) {
 		return true
 	}
 	return IsNullOrUnderfined(str)
@@ -172,12 +171,12 @@ func IsEmptyOrUnderfined(str string) bool {
 
 //-------- trim
 
-//trimBlankCharByMode Removes blank char at the beginning and end of the string by mode.
+//trimSpaceByMode Removes space char at the beginning and end of the string by mode.
 //mode :
 //	-1 : left trim
 //	 0 : left and right
 //	 1 : right trim
-func trimBlankCharByMode(str string, mode int) string {
+func trimSpaceByMode(str string, mode int) string {
 	if IsEmpty(str) {
 		return ""
 	}
@@ -187,13 +186,13 @@ func trimBlankCharByMode(str string, mode int) string {
 	headPoint, endPoint := 0, strSize
 
 	if mode <= 0 {
-		for headPoint < endPoint && isBlankASCII(str[headPoint]) {
+		for headPoint < endPoint && isSpaceASCII(str[headPoint]) {
 			headPoint++
 		}
 	}
 
 	if mode >= 0 {
-		for headPoint < endPoint && isBlankASCII(str[endPoint-1]) {
+		for headPoint < endPoint && isSpaceASCII(str[endPoint-1]) {
 			endPoint--
 		}
 	}
@@ -202,20 +201,25 @@ func trimBlankCharByMode(str string, mode int) string {
 
 }
 
-func TrimBlankCharRight(str string) string {
-	return trimBlankCharByMode(str, 1)
+//TrimSpaceRight Removes space char at the  end of the string
+func TrimSpaceRight(str string) string {
+	return trimSpaceByMode(str, 1)
 }
 
-func TrimBlankCharLeft(str string) string {
-	return trimBlankCharByMode(str, -1)
+//TrimSpaceLeft Removes space char at the beginning of the string
+func TrimSpaceLeft(str string) string {
+	return trimSpaceByMode(str, -1)
 }
 
-func TrimBlankChar(str string) string {
-	return trimBlankCharByMode(str, 0)
+//TrimSpace Removes space char at the beginning and end of the string
+func TrimSpace(str string) string {
+	return trimSpaceByMode(str, 0)
 }
 
-//-----star check
+//-----star check and end check
 
+//IsStartWith Checks if the str starts with a prefix
+//ignoreCase ，Indicates whether case is ignored
 func IsStartWith(str, prefix string, ignoreCase bool) bool {
 	if IsEmpty(str) || IsEmpty(prefix) {
 
@@ -249,7 +253,20 @@ func IsStartWithAny(str string, ignoreCase bool, prefixes ...string) bool {
 	return false
 }
 
+func IsEndWith(str, suffix string, ignoreCase bool) bool {
+	if IsEmpty(str) || IsEmpty(suffix) {
+		return IsEmpty(str) && IsEmpty(suffix)
+	}
+
+	if ignoreCase {
+		str, suffix = strings.ToLower(str), strings.ToLower(suffix)
+
+	}
+	return strings.HasSuffix(str, suffix)
+
+}
+
 //todo: add char utils and move this func to it.
-func isBlankASCII(char byte) bool {
+func isSpaceASCII(char byte) bool {
 	return char == ' ' || char == '\t' || char == '\n' || char == '\r'
 }
