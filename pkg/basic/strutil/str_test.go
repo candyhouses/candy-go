@@ -298,7 +298,6 @@ func Test_trimBlankCharByMode(t *testing.T) {
 		args args
 		want string
 	}{
-
 		{name: "left trim", args: args{str: "     hello", mode: -1}, want: "hello"},
 		{name: "left trim but left don't have black char", args: args{str: "hello", mode: -1}, want: "hello"},
 		{name: "left trim", args: args{str: "     hello   ", mode: -1}, want: "hello   "},
