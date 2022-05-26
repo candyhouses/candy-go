@@ -90,11 +90,11 @@ func TestInster(t *testing.T) {
 	stu_test := []stuTest{{
 		name: "hello",
 		args: args[Dog]{
-			oldSlice: []Dog{Dog{name: "胖虎", kind: "柯基"}, Dog{name: "hi", kind: "tugou"}},
+			oldSlice: []Dog{{name: "胖虎", kind: "柯基"}, {name: "hi", kind: "tugou"}},
 			i:        0,
-			newSlice: []Dog{Dog{name: "add", kind: "test"}},
+			newSlice: []Dog{{name: "add", kind: "test"}},
 		},
-		want: []Dog{Dog{name: "add", kind: "test"}, Dog{name: "胖虎", kind: "柯基"}, Dog{name: "hi", kind: "tugou"}},
+		want: []Dog{{name: "add", kind: "test"}, {name: "胖虎", kind: "柯基"}, {name: "hi", kind: "tugou"}},
 	}}
 
 	for _, tt := range int_tests {
