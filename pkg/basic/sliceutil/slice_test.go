@@ -11,7 +11,6 @@ type Dog struct {
 }
 
 func TestInster(t *testing.T) {
-
 	type args[T any] struct {
 		oldSlice []T
 		i        int
@@ -22,8 +21,7 @@ func TestInster(t *testing.T) {
 		args args[int]
 		want []int
 	}
-	int_tests := []intTest{
-
+	intTests := []intTest{
 		{
 			name: "add a slice",
 			args: args[int]{
@@ -58,8 +56,7 @@ func TestInster(t *testing.T) {
 		args args[string]
 		want []string
 	}
-	str_tests := []strTest{
-
+	strTests := []strTest{
 		{
 			name: "add a slice",
 			args: args[string]{
@@ -87,7 +84,7 @@ func TestInster(t *testing.T) {
 		want []Dog
 	}
 
-	stu_test := []stuTest{{
+	stuTestes := []stuTest{{
 		name: "hello",
 		args: args[Dog]{
 			oldSlice: []Dog{{name: "胖虎", kind: "柯基"}, {name: "hi", kind: "tugou"}},
@@ -97,7 +94,7 @@ func TestInster(t *testing.T) {
 		want: []Dog{{name: "add", kind: "test"}, {name: "胖虎", kind: "柯基"}, {name: "hi", kind: "tugou"}},
 	}}
 
-	for _, tt := range int_tests {
+	for _, tt := range intTests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Insert(tt.args.oldSlice, tt.args.i, tt.args.newSlice...); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Inster() = %v, want %v", got, tt.want)
@@ -105,7 +102,7 @@ func TestInster(t *testing.T) {
 		})
 	}
 
-	for _, tt := range str_tests {
+	for _, tt := range strTests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Insert(tt.args.oldSlice, tt.args.i, tt.args.newSlice...); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Inster() = %v, want %v", got, tt.want)
@@ -113,14 +110,13 @@ func TestInster(t *testing.T) {
 		})
 	}
 
-	for _, tt := range stu_test {
+	for _, tt := range stuTestes {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Insert(tt.args.oldSlice, tt.args.i, tt.args.newSlice...); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Inster() = %v, want %v", got, tt.want)
 			}
 		})
 	}
-
 }
 
 func TestDelete(t *testing.T) {
@@ -134,15 +130,46 @@ func TestDelete(t *testing.T) {
 		args stringArgs
 		want []string
 	}{
-
-		{name: "normal case", args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 1, end: 3}, want: []string{"zero", "fore"}},
-		{name: "normal case", args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 0, end: 4}, want: nil},
-		{name: "normal case", args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 0, end: 0}, want: []string{"one", "two", "three", "fore"}},
-		{name: "normal case", args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 4, end: 4}, want: []string{"zero", "one", "two", "three"}},
-		{name: "normal case", args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 4, end: 3}, want: []string{"zero", "one", "two", "three", "fore"}},
-		{name: "normal case", args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 1, end: 5}, want: []string{"zero", "one", "two", "three", "fore"}},
-		{name: "normal case", args: stringArgs{sli: nil, start: 1, end: 3}, want: nil},
-		{name: "normal case", args: stringArgs{sli: []string{}, start: 1, end: 3}, want: []string{}},
+		{
+			name: "normal case",
+			args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 1, end: 3},
+			want: []string{"zero", "fore"},
+		},
+		{
+			name: "normal case",
+			args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 0, end: 4},
+			want: nil,
+		},
+		{
+			name: "normal case",
+			args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 0, end: 0},
+			want: []string{"one", "two", "three", "fore"},
+		},
+		{
+			name: "normal case",
+			args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 4, end: 4},
+			want: []string{"zero", "one", "two", "three"},
+		},
+		{
+			name: "normal case",
+			args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 4, end: 3},
+			want: []string{"zero", "one", "two", "three", "fore"},
+		},
+		{
+			name: "normal case",
+			args: stringArgs{sli: []string{"zero", "one", "two", "three", "fore"}, start: 1, end: 5},
+			want: []string{"zero", "one", "two", "three", "fore"},
+		},
+		{
+			name: "normal case",
+			args: stringArgs{sli: nil, start: 1, end: 3},
+			want: nil,
+		},
+		{
+			name: "normal case",
+			args: stringArgs{sli: []string{}, start: 1, end: 3},
+			want: []string{},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
